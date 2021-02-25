@@ -13,7 +13,7 @@
         <tr v-for="(val,index) in list" :key="index" class="fontboyut" :style="'cursor:pointer;color:'+val.color" @click="removeThis(val)">
           <td align="left" ><img :src="val.pic" :alt="val.cap" width="60" height="60">{{"  " +val.name}}</td>
           <td>{{val.cap}}</td>
-          <td  align="right">{{val.price}}</td>
+          <td  align="right">{{val.price!="-"? val.price:""}}<div class="spinner-grow text-warning" v-if="val.price==='-'"></div></td>
           <th scope="col" colspan="2">{{"      "}}</th>
         </tr>
       </tbody>
@@ -27,6 +27,7 @@
           <th scope="col" align="left"><div style="float: left;width:20%;">Coin</div>
 <div style="float: right;width:80%"><input placeholder="Search Coin" type="text" id="filterText" name="filterText" v-model="filterText" style="width:90%;height:35px; text-align:left;font-size:15px;"/></div> </th>
           <th scope="col" align="left">Name</th>
+          <th scope="col" align="left">Pair</th>
           <th scope="col" align="right"></th>
         </tr>
       </thead>
@@ -34,6 +35,7 @@
         <tr v-for="(val,index) in allList" :key="index" @click="selectThis(val)" style="cursor:pointer;" v-show="checkVisibility(val)">
           <td align="left" ><img :src="val.pic" :alt="val.cap" width="20" height="20">{{"  " +val.name}}</td>
           <td>{{val.cap}}</td>
+          <td>{{val.val}}</td>
           <td>{{val.text}}</td>
         </tr>
       </tbody>
