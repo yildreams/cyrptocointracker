@@ -73,30 +73,28 @@ export default {
     checkVisibility(val){
       for (var i = this.list.length - 1; i >= 0; i--) {
         var itm=this.list[i];
-        if (itm.name===val.name) return false;
+        if (itm.text===val.text) return false;
       }
       return this.filterText.length==0 || val.name.toLowerCase().indexOf(this.filterText.toLowerCase())>=0
     },
     selectThis(val){
       this.list.push(val);
      
-      this.allList = this.allList.filter(el => el.name != val.name);
+      this.allList = this.allList.filter(el => el.text != val.text);
        localStorage.removeItem('list_coins');
        localStorage.setItem('list_coins',JSON.stringify(this.list));
-       this.connection.close()
       this.startWebSocket();
     },
     removeThis(val){
       this.allList.push(val);
-      this.list = this.list.filter(el => el.name != val.name);
+      this.list = this.list.filter(el => el.text != val.text);
        localStorage.removeItem('list_coins');
        localStorage.setItem('list_coins',JSON.stringify(this.list));
-       this.connection.close()
       this.startWebSocket();
     },
     startWebSocket(){
       //console.log(this.allList);
-    console.log("Starting connection to WebSocket Server")
+    //console.log("Starting connection to WebSocket Server")
     var txt="";
     for (var i = this.list.length - 1; i >= 0; i--) {
       let theval=this.list[i];
@@ -126,7 +124,7 @@ export default {
 
     this.connection.onopen = function() {
       //console.log(event)
-      console.log("Successfully connected to the echo websocket server...")
+      //console.log("Successfully connected to the echo websocket server...")
     }
 
     }
