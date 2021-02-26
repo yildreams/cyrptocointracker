@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <table class="table table-striped table-dark">
+    <table class="table table-hower table-dark">
       <thead>
         <tr style="fontSize:60px;color:gray" >
           
@@ -13,7 +13,9 @@
         <tr v-for="(val,index) in list" :key="index" class="fontboyut" :style="'cursor:pointer;color:'+val.color" @click="removeThis(val)">
           <td align="left" ><img :src="val.pic" :alt="val.cap" width="60" height="60">{{"  " +val.name}}</td>
           <td>{{val.cap}}</td>
-          <td  align="right">{{val.price!="-"? val.price:""}}<div class="spinner-grow text-warning" v-if="val.price==='-'"></div></td>
+          <td  align="right">{{val.price!="-"? val.price:""}}<div class="spinner-grow text-warning" v-if="val.price==='-'"></div><div class="myDiv" v-if="val.price!='-'">
+  <p>{{val.val}}</p>
+</div></td>
           <th scope="col" colspan="2">{{"      "}}</th>
         </tr>
       </tbody>
@@ -23,17 +25,31 @@
     
     <table class="table table-striped table-dark">
       <thead>
+        <tr style="fontSize:20px;color:gray;">
+          <th scope="col" align="left" style="width: 3%"></th>
+          <th scope="col" align="left" style="width: 15%">Coin</th>
+          <th scope="col" style="width: 42%" align="left">Name</th>
+          <th scope="col" style="width: 20%" align="left">Pair</th>
+          <th scope="col" style="width: 20%" align="right">Key</th>
+        </tr>
+      </thead>
+      <thead>
         <tr style="fontSize:20px;color:gray">
-          <th scope="col" align="left"><div style="float: left;width:20%;">Coin</div>
-<div style="float: right;width:80%"><input placeholder="Search Coin" type="text" id="filterText" name="filterText" v-model="filterText" style="width:90%;height:35px; text-align:left;font-size:15px;"/></div> </th>
-          <th scope="col" align="left">Name</th>
-          <th scope="col" align="left">Pair</th>
+          <th scope="col" colspan="3" align="left">
+<div style="float: right;width:100%"><input placeholder="Search Coin" type="text" id="filterText" name="filterText" v-model="filterText" style="width:100%;height:35px; text-align:left;font-size:15px;"/></div> </th>
+         
+          <th scope="col" align="left">
+          <select v-model="selectedPair" class="browser-default custom-select">
+  <option selected value="-1">Select Pair</option>
+  <option :value="i" v-for="(i,index) in pairlist" :key="index">{{i}}</option>
+</select></th>
           <th scope="col" align="right"></th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(val,index) in allList" :key="index" @click="selectThis(val)" style="cursor:pointer;" v-show="checkVisibility(val)">
-          <td align="left" ><img :src="val.pic" :alt="val.cap" width="20" height="20">{{"  " +val.name}}</td>
+          <td align="left" ><img :src="val.pic" :alt="val.cap" width="25" height="25"></td>
+          <td align="left" >{{"  " +val.name}}</td>
           <td>{{val.cap}}</td>
           <td>{{val.val}}</td>
           <td>{{val.text}}</td>
@@ -54,6 +70,8 @@ export default {
   },data: function() {
     return {
       connection: null,
+      pairlist:[],
+      selectedPair:"-1",
       allList:[],
       filterText:'',
       list:[
@@ -63,6 +81,13 @@ export default {
   },
   created: function() {
     this.allList=SiteValues.getList();
+    for (var i = this.allList.length - 1; i >= 0; i--) {
+      let a=this.allList[i];
+      if (this.pairlist.indexOf(a.val)<0) {
+        this.pairlist.push(a.val);
+      }
+    }
+    this.pairlist.sort();
     var samplelist_data =JSON.parse(localStorage.getItem("list_coins"));
     if (samplelist_data) {
       this.list=samplelist_data;
@@ -75,18 +100,16 @@ export default {
         var itm=this.list[i];
         if (itm.text===val.text) return false;
       }
-      return this.filterText.length==0 || val.name.toLowerCase().indexOf(this.filterText.toLowerCase())>=0
+      return ((this.filterText.length==0 || val.name.toLowerCase().indexOf(this.filterText.toLowerCase())>=0 || val.cap.toLowerCase().indexOf(this.filterText.toLowerCase())>=0) && (this.selectedPair=="-1" || val.val==this.selectedPair))
     },
     selectThis(val){
       this.list.push(val);
      
-      this.allList = this.allList.filter(el => el.text != val.text);
        localStorage.removeItem('list_coins');
        localStorage.setItem('list_coins',JSON.stringify(this.list));
       this.startWebSocket();
     },
     removeThis(val){
-      this.allList.push(val);
       this.list = this.list.filter(el => el.text != val.text);
        localStorage.removeItem('list_coins');
        localStorage.setItem('list_coins',JSON.stringify(this.list));
@@ -146,6 +169,9 @@ export default {
 .fontboyut{
   font-size: 20px;
 }
+.myDiv{
+  font-size: 8px;
+}
 
 }
 
@@ -153,7 +179,13 @@ export default {
 .fontboyut{
   font-size: 50px;
 }
-
+.myDiv{
+  font-size: 12px;
+  padding-top: 0px;
+  margin-top: 0px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
 
 }
 
