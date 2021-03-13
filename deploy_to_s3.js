@@ -5,8 +5,8 @@ const getFiles = require('node-recursive-directory');
 const mime = require('mime');
 
 const s3 = new AWS.S3({
-    accessKeyId: "AKIA6P7POOTK74Y3SUMG",
-    secretAccessKey: "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"
+    accessKeyId: "AKIA6P7POOTKYZDPEWMT",
+    secretAccessKey: "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"
 });
 
 //const fileName = 'contacts.csv';

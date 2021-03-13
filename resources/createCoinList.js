@@ -23,6 +23,9 @@ readXlsxFile('coinlist.xlsx').then((rows) => {
 		  		color:"",
 		  		up:1000000,
 		  		down:-1,
+		  		pc:0,
+		  		l:0,
+		  		h:0,
 		  		pic:"https://s2.coinmarketcap.com/static/img/coins/64x64/" + getIndex(indexlist,row[1]) +".png"};
 
 		  	list.push(obj);

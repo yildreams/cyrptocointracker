@@ -5,18 +5,26 @@
         <tr style="fontSize:60px;color:gray" >
           
           <th scope="col" align="left" colspan="2">COIN</th>
+          <th scope="col" align="right">% Dif</th>
           <th scope="col" align="right">Price</th>
           <th scope="col" colspan="2"></th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(val,index) in list" :key="index" class="fontboyut" :style="'cursor:pointer;color:'+val.color" @click="selectedAsThis(val)">
-          <td align="left" ><img :src="val.pic" :alt="val.cap" width="60" height="60">{{"  " +val.name}}</td>
-          <td>{{val.cap}}</td>
-          <td  align="right">{{val.price!="-"? val.price:""}}<div class="spinner-grow text-warning" v-if="val.price==='-'"></div><div class="myDiv" v-if="val.price!='-'">
-  <p>{{val.val}}</p>
-</div></td>
-          <th scope="col" colspan="2">{{"      "}}</th>
+        <tr v-for="(val,index) in list" :key="index" class="fontboyut" :style="'background-color:#'+ (val.pc<0? 'C2AED6':'80CFA9') +'; cursor:pointer;color:'+val.color" @click="selectedAsThis(val)">
+          <td align="left" ><img :src="val.pic" :alt="val.cap" width="60" height="60">{{"  " +val.name}}
+          </td>
+          <td>{{val.cap}}
+            <div class="myDiv" v-if="val.price!='-'"><p>{{val.l}} / {{val.h}}</p></div>
+          </td>
+          <td>{{Number(val.pc).toFixed(2)}}
+          </td>
+          <td  align="right">
+            {{val.price!="-"? val.price:""}}
+            <div class="spinner-grow text-warning" v-if="val.price==='-'"></div>
+            <div class="myDiv" v-if="val.price!='-'"><p>{{val.val}}</p></div>
+          </td>
+          <td scope="col" colspan="2">{{"      "}}</td>
         </tr>
       </tbody>
     </table>
@@ -118,7 +126,7 @@ export default {
       allList:[],
       filterText:'',
       list:[
-        {name:"BTC",cap:"Bitcoin",val:"USDT",text:"btcusdt",price:"-",color:"",pic:"https://s2.coinmarketcap.com/static/img/coins/64x64/1.png",up:55000,down:4000}
+        {name:"BTC",cap:"Bitcoin",val:"USDT",text:"btcusdt",price:"-",color:"",pic:"https://s2.coinmarketcap.com/static/img/coins/64x64/1.png",pc:0,l:0,h:0,up:55000,down:4000}
         ]
     }
   },
@@ -139,7 +147,7 @@ export default {
     }
     this.startWebSocket();
     setInterval(function(){
-      console.log("tick");
+      //console.log("tick");
       window.location.reload(1)
     }, 120000);
   },
@@ -147,7 +155,7 @@ export default {
     goToTheSite(val){
       val=val.toLowerCase();
       val = val.replace(new RegExp(" ", 'g'), "-");
-      var url="https://coinmarketcap.com/currencies/"+ val +"/";
+      var url="https://coinmarketcap.com/currencies/"+ val.trim() +"/";
 
       window.open(url); 
 
@@ -211,7 +219,7 @@ export default {
     var txt="";
     for (var i = this.list.length - 1; i >= 0; i--) {
       let theval=this.list[i];
-      txt+="/"+theval.text+"@trade"
+      txt+="/"+theval.text+"@ticker" //"@trade"
     }
     this.connection = new WebSocket("wss://stream.binance.com:9443/ws" + txt)
     var self = this;
@@ -222,14 +230,17 @@ export default {
         let theval=self.list[i];
         let compText=theval.name+theval.val
         if (dat.s==compText) {
-          if (theval.price>dat.p) {
+          if (theval.price>dat.c) {
             theval.color="red";
-          } else if (theval.price<dat.p) {
+          } else if (theval.price<dat.c) {
             theval.color="green";
-          }else{
+          }/*else{
             theval.color="white";
-          }
-          theval.price=dat.p
+          }*/
+          theval.price=dat.c
+          theval.pc=dat.P;
+          theval.l=dat.l;
+          theval.h=dat.h;
 
           if (Number(theval.price)>Number(theval.up) || theval.up==1000000) {
             self.playSound("https://soundbible.com/mp3/Auditorium%20Applause-SoundBible.com-280911206.mp3");
