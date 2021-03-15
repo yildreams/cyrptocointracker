@@ -3,11 +3,11 @@ const fs = require('fs');
 const AWS = require('aws-sdk');
 const getFiles = require('node-recursive-directory');
 const mime = require('mime');
+var fssnyc = require('fs-sync');
+ 
 
-const s3 = new AWS.S3({
-    accessKeyId: "AKIA6P7POOTKYZDPEWMT",
-    secretAccessKey: "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"
-});
+
+const s3 = new AWS.S3(getKey());
 
 //const fileName = 'contacts.csv';
 
@@ -40,6 +40,12 @@ const uploadFile = (fileName,PREFIX) => {
   });
 };
 
+function getKey(){
+    if(fssnyc.exists('.key')){
+        return fssnyc.readJSON('.key');
+    }
+    return null;
+}
 //uploadFile("ayite");
 
 //console.log(__dirname);

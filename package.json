@@ -10,6 +10,7 @@
   "dependencies": {
     "aws-sdk": "^2.861.0",
     "core-js": "^3.6.5",
+    "fs-sync": "^1.0.6",
     "node-recursive-directory": "^1.2.0",
     "read-excel-file": "^5.0.0",
     "vue": "^2.6.11",

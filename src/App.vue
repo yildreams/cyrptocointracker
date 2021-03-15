@@ -18,6 +18,7 @@
             <div class="myDiv" v-if="val.price!='-'"><p>{{val.l}} / {{val.h}}</p></div>
           </td>
           <td>{{Number(val.pc).toFixed(2)}}
+             <div class="myDiv" v-if="val.price!='-'"><p>{{val.vlm}}</p></div>
           </td>
           <td  align="right">
             {{val.price!="-"? val.price:""}}
@@ -241,6 +242,7 @@ export default {
           theval.pc=dat.P;
           theval.l=dat.l;
           theval.h=dat.h;
+          theval.vlm=dat.v;
 
           if (Number(theval.price)>Number(theval.up) || theval.up==1000000) {
             self.playSound("https://soundbible.com/mp3/Auditorium%20Applause-SoundBible.com-280911206.mp3");
