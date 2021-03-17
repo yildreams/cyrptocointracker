@@ -212,6 +212,7 @@ export default {
       this.list = this.list.filter(el => el.text != this.selectedCoin.text);
        localStorage.removeItem('list_coins');
        localStorage.setItem('list_coins',JSON.stringify(this.list));
+
       this.startWebSocket();
     },
     startWebSocket(){
