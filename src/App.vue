@@ -1,5 +1,7 @@
 <template>
+
   <div id="app">
+    <speech :text="speechText"></speech>
     <table class="table table-hower table-dark">
       <thead>
         <tr style="fontSize:60px;color:gray" >
@@ -110,11 +112,12 @@
 <script>
 //import HelloWorld from './components/HelloWorld.vue'
 import SiteValues from './config/SiteValues'
+import Speech from './components/Speech'
 
 export default {
   name: 'App',
   components: {
-    //HelloWorld
+    Speech
   },data: function() {
     return {
       showModal:false,
@@ -126,6 +129,7 @@ export default {
       selectedPair:"-1",
       allList:[],
       filterText:'',
+      speechText:"",
       list:[
         {name:"BTC",cap:"Bitcoin",val:"USDT",text:"btcusdt",price:"-",color:"",pic:"https://s2.coinmarketcap.com/static/img/coins/64x64/1.png",pc:0,l:0,h:0,up:55000,down:4000}
         ]
@@ -150,7 +154,7 @@ export default {
     setInterval(function(){
       //console.log("tick");
       window.location.reload(1)
-    }, 120000);
+    }, 3600000);
   },
   methods:{
     goToTheSite(val){
@@ -196,6 +200,7 @@ export default {
        localStorage.removeItem('list_coins');
        localStorage.setItem('list_coins',JSON.stringify(this.list));
       this.startWebSocket();
+      this.speechText=val.cap+ val.name +" added";
     },
     selectedAsThis(val){
       this.showModal=true;
@@ -214,6 +219,7 @@ export default {
        localStorage.setItem('list_coins',JSON.stringify(this.list));
 
       this.startWebSocket();
+      this.speechText=this.selectedCoin.cap+ this.selectedCoin.name +" removed";
     },
     startWebSocket(){
       //console.log(this.allList);
@@ -246,15 +252,28 @@ export default {
           theval.vlm=dat.v;
 
           if (Number(theval.price)>Number(theval.up) || theval.up==1000000) {
-            self.playSound("https://soundbible.com/mp3/Auditorium%20Applause-SoundBible.com-280911206.mp3");
-            theval.up=theval.price * 1.1;
+            //self.playSound("https://soundbible.com/mp3/Auditorium%20Applause-SoundBible.com-280911206.mp3");
+            if (theval.up!=1000000) {
+              //console.log("speechText will change");
+              self.speechText=theval.cap + theval.name +" is going UP ";
+              console.log(theval.name +" is going UP :"+Number(theval.price));
+            }
+            
+            theval.up=theval.price * 1.02;
+            //theval.down=theval.price * 0.98;
             localStorage.removeItem('list_coins');
             localStorage.setItem('list_coins',JSON.stringify(self.list));
           }
 
           if (Number(theval.price)<Number(theval.down) || theval.down==-1) {
-            self.playSound("https://soundbible.com/mp3/Glass%20Breaking-SoundBible.com-1765179538.mp3");
-            theval.down=theval.price*0.9;
+            //self.playSound("https://soundbible.com/mp3/Glass%20Breaking-SoundBible.com-1765179538.mp3");
+            if (theval.down!=-1) {
+              self.speechText=theval.cap + theval.name +" is going DOWN.";
+              console.log(theval.name +" is going DOWN :" +Number(theval.price));
+            }
+
+            theval.down=theval.price*0.98;
+            //theval.up=theval.price * 1.02;
             localStorage.removeItem('list_coins');
             localStorage.setItem('list_coins',JSON.stringify(self.list));
           }

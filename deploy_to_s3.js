@@ -6,8 +6,8 @@ const mime = require('mime');
 var fssnyc = require('fs-sync');
  
 
-
-const s3 = new AWS.S3(getKey());
+let theKey=getKey();
+const s3 = new AWS.S3(theKey);
 
 //const fileName = 'contacts.csv';
 
@@ -18,7 +18,7 @@ const uploadFile = (fileName,PREFIX) => {
      var base64data = new Buffer(data, 'binary');
 
      const params = {
-         Bucket: 'crptocointracker', // pass your bucket name
+         Bucket: theKey.bucket, // pass your bucket name
          Key: fileName.substr(fileName.lastIndexOf(PREFIX) + PREFIX.length), 
          Body: base64data,
          ContentType:mime.getType(fileName)

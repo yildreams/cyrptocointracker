@@ -14,6 +14,7 @@
     "node-recursive-directory": "^1.2.0",
     "read-excel-file": "^5.0.0",
     "vue": "^2.6.11",
+    "vue-spinner": "^1.0.4",
     "vue-use-sound": "^1.1.1",
     "vue-websocket": "^0.2.3"
   },
@@ -24,7 +25,8 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "vue-text-to-speech": "^1.0.6"
   },
   "eslintConfig": {
     "root": true,
